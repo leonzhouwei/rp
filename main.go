@@ -16,10 +16,10 @@ func main() {
 	db := "mydb"
 
 	// write
-//	err := common.WritePoints(host, port, db, points)
-//	if err != nil {
-//		log.Fatal(err)
-//	}
+	err := common.WritePoints(host, port, db, points)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// read
 	result, err := common.QueryInfluxdb(host, port, db, sql)
