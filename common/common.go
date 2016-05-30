@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	sql    = "select value from cpu"
-	points = "cpu,host=s1 value=10 1"
+	MinSeriesNum = 1
+	MaxSeriesNum = 1000
 )
 
 type QueryRet struct {
