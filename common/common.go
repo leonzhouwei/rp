@@ -12,11 +12,6 @@ import (
 	"github.com/qiniu/log.v1"
 )
 
-const (
-	MinSeriesNum = 1
-	MaxSeriesNum = 10
-)
-
 type QueryRet struct {
 	Results []Result `json:"results,omitempty"`
 	Err     error      `json:"error,omitempty"`

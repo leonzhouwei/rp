@@ -1,8 +1,10 @@
 package main
 
 import (
-	"github.com/qiniu/log.v1"
 	"tmp/common"
+	"tmp/conf"
+	
+	"github.com/qiniu/log.v1"
 )
 
 const (
@@ -10,9 +12,9 @@ const (
 )
 
 func main() {
-	host := "127.0.0.1"
-	port := 8086
-	db := "mydb"
+	host := conf.Host
+	port := conf.Port
+	db := conf.Db
 
 	// read
 	result, err := common.QueryInfluxdb(host, port, db, sql)

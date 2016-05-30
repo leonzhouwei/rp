@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/qiniu/log.v1"
 	"tmp/common"
+	"tmp/conf"
+	
+	"github.com/qiniu/log.v1"
 )
 
 const (
@@ -12,12 +14,14 @@ const (
 )
 
 func main() {
-	host := "127.0.0.1"
-	port := 8086
-	db := "mydb"
+	host := conf.Host
+	port := conf.Port
+	db := conf.Db
+	min := conf.MinSeriesNum
+	max := conf.MaxSeriesNum
 
 	// write
-	for i := common.MinSeriesNum; i <= common.MaxSeriesNum; i++ {
+	for i := min; i <= max; i++ {
 		pointsString := fmt.Sprintf(points, i, i, i, i)
 		err := common.WritePoints(host, port, db, pointsString)
 		if err != nil {
