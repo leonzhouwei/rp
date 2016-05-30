@@ -14,7 +14,7 @@ import (
 
 type QueryRet struct {
 	Results []Result `json:"results,omitempty"`
-	Err     error      `json:"error,omitempty"`
+	Err     error    `json:"error,omitempty"`
 }
 
 func (e QueryRet) String() string {
@@ -29,7 +29,7 @@ func (e QueryRet) String() string {
 
 type Result struct {
 	Series []Serie `json:"series,omitempty"`
-	Err    string    `json:"error,omitempty"`
+	Err    string  `json:"error,omitempty"`
 }
 
 func (e Result) String() string {
@@ -72,7 +72,7 @@ func WritePoints(
 }
 
 func QueryInfluxdb(host string, port int, db string, sql string) (ret QueryRet, err error) {
-	
+
 	addr := host + ":" + strconv.Itoa(port)
 	queryURL := "http://" + addr + "/query?db=" + db + "&q=" + url.QueryEscape(sql)
 	resp, err := http.Get(queryURL)
