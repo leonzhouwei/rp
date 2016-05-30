@@ -14,7 +14,7 @@ import (
 
 const (
 	MinSeriesNum = 1
-	MaxSeriesNum = 1000
+	MaxSeriesNum = 10
 )
 
 type QueryRet struct {
