@@ -39,7 +39,7 @@ func main() {
 			common.VariableRetentionPolicyNameFormat,
 			seriesName,
 		)
-		err := common.CreatRetentionPolicy(
+		result, err := common.CreatRetentionPolicy(
 			host,
 			port,
 			db,
@@ -49,10 +49,10 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
+		log.Info(result)
 
 		// write the points
-
-		for j := 1; j <= 10000; j++ {
+		for j := 1; j <= 10; j++ {
 			pointsString := fmt.Sprintf(
 				points,
 				i,
