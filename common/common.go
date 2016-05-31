@@ -12,8 +12,11 @@ import (
 	"github.com/qiniu/log.v1"
 )
 
+type RetentionPolicy string
+
 const (
-	SystemRp1Hour = "system_rp_1h"
+	RetentionPolicy1Hour   = "system_rp_1h"
+	RetentionPolicyForever = "default"
 )
 
 type QueryRet struct {
@@ -64,10 +67,10 @@ func (e Serie) String() string {
 }
 
 func WritePoints(
-	host string, port int, db string, rp string, points string) error {
+	host string, port int, db string, rp RetentionPolicy, points string) error {
 
 	addr := host + ":" + strconv.Itoa(port)
-	url := "http://" + addr + "/write?db=" + db + "&rp=" + rp
+	url := "http://" + addr + "/write?db=" + db + "&rp=" + string(rp)
 	log.Info("Write points query:", points)
 	body := strings.NewReader(points)
 	resp, err := http.Post(url, "text/plain", body)
