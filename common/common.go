@@ -79,7 +79,6 @@ func WritePoints(
 }
 
 func QueryInfluxdb(host string, port int, db string, sql string) (ret QueryRet, err error) {
-
 	addr := host + ":" + strconv.Itoa(port)
 	queryURL := "http://" + addr + "/query?db=" + db + "&q=" + url.QueryEscape(sql)
 	resp, err := http.Get(queryURL)
@@ -129,7 +128,7 @@ func CreatDatabase(host string, port int, dbName string) error {
 			)
 		}
 	}
-
+	
 	return nil
 }
 
@@ -139,7 +138,7 @@ func CreatRetentionPolicy(
 	port int,
 	dbName string,
 	rpName string,
-	rp string) error {
+	rp string) (ret QueryRet, err error) {
 
 	var sql string
 	if rp != "" || rp == RetentionPolicyForever {
@@ -157,27 +156,20 @@ func CreatRetentionPolicy(
 		)
 	}
 
-	addr := host + ":" + strconv.Itoa(port)
-	url := "http://" + addr + "/query?q=" + url.QueryEscape(sql)
-	log.Info(url)
-	resp, err := http.Get(url)
+	return QueryInfluxdb(host, port, dbName, sql)
+}
 
-	if err != nil {
-		return fmt.Errorf("%v Create RP fail:%v\n", url, err)
-	}
-	if resp != nil {
-		defer resp.Body.Close()
+func AlterRetentionPolicyToMinDuration(
+	host string,
+	port int,
+	dbName string,
+	rpName string) (ret QueryRet, err error) {
 
-		_, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return fmt.Errorf(
-				"%v Create RP fail,respcode: %v, error: %v",
-				url,
-				resp.StatusCode,
-				err,
-			)
-		}
-	}
+	sql := fmt.Sprintf(
+		"ALTER RETENTION POLICY %s on %s duration 1h",
+		rpName,
+		dbName,
+	)
 
-	return nil
+	return QueryInfluxdb(host, port, dbName, sql)
 }
