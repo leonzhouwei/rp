@@ -73,6 +73,8 @@ func WritePoints(
 	log.Info("Write points query:", url, ":", points)
 	body := strings.NewReader(points)
 	resp, err := http.Post(url, "text/plain", body)
+	defer CloseResponse(resp)
+	
 	log.Info(resp.Status)
 
 	return err
@@ -82,9 +84,8 @@ func QueryInfluxdb(host string, port int, db string, sql string) (ret QueryRet, 
 	addr := host + ":" + strconv.Itoa(port)
 	queryURL := "http://" + addr + "/query?db=" + db + "&q=" + url.QueryEscape(sql)
 	resp, err := http.Get(queryURL)
-	if resp != nil {
-		defer resp.Body.Close()
-	}
+	defer CloseResponse(resp)
+	
 	if err != nil {
 		return
 	}
@@ -111,13 +112,12 @@ func CreatDatabase(host string, port int, dbName string) error {
 	url := "http://" + addr + "/query?q=CREATE+DATABASE+" + dbName
 	log.Info(url)
 	resp, err := http.Get(url)
+	defer CloseResponse(resp)
 
 	if err != nil {
 		return fmt.Errorf("%v Create database fail:%v\n", url, err)
 	}
 	if resp != nil {
-		defer resp.Body.Close()
-
 		_, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return fmt.Errorf(
@@ -172,4 +172,14 @@ func AlterRetentionPolicyToMinDuration(
 	)
 
 	return QueryInfluxdb(host, port, dbName, sql)
+}
+
+func CloseResponse(resp *http.Response) {
+	if resp == nil {
+		return
+	}
+	err := resp.Body.Close()
+	if err != nil {
+		log.Error(err)
+	}
 }

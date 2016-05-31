@@ -52,7 +52,7 @@ func main() {
 		log.Info(result)
 
 		// write the points
-		for j := 1; j <= 10; j++ {
+		for j := 1; j <= 1000; j++ {
 			pointsString := fmt.Sprintf(
 				points,
 				i,
@@ -71,6 +71,6 @@ func main() {
 				log.Fatal(err)
 			}
 		}
-
+		time.Sleep(time.Millisecond * 100)
 	}
 }
