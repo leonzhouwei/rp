@@ -12,6 +12,10 @@ import (
 	"github.com/qiniu/log.v1"
 )
 
+const (
+	SystemRp1Hour = "system_rp_1h"
+)
+
 type QueryRet struct {
 	Results []Result `json:"results,omitempty"`
 	Err     error    `json:"error,omitempty"`
@@ -60,13 +64,14 @@ func (e Serie) String() string {
 }
 
 func WritePoints(
-	host string, port int, db string, points string) error {
+	host string, port int, db string, rp string, points string) error {
 
 	addr := host + ":" + strconv.Itoa(port)
-	url := "http://" + addr + "/write?db=" + db
+	url := "http://" + addr + "/write?db=" + db + "&rp=" + rp
 	log.Info("Write points query:", points)
 	body := strings.NewReader(points)
-	_, err := http.Post(url, "text/plain", body)
+	resp, err := http.Post(url, "text/plain", body)
+	log.Info(resp.Status)
 
 	return err
 }

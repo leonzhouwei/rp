@@ -1,6 +1,7 @@
 package main
 
 import (
+	"time"
 	"fmt"
 
 	"tmp/common"
@@ -10,8 +11,12 @@ import (
 )
 
 const (
-	points = "cpu_%v,host=host_%v value=%v %v"
+	points = `cpu_%v,host=host_%v value=%v,time_human="%v"`
 )
+
+func init() {
+	log.SetOutputLevel(log.Ldebug)
+}
 
 func main() {
 	host := conf.Host
@@ -22,8 +27,8 @@ func main() {
 
 	// write
 	for i := min; i <= max; i++ {
-		pointsString := fmt.Sprintf(points, i, i, i, i)
-		err := common.WritePoints(host, port, db, pointsString)
+		pointsString := fmt.Sprintf(points, i, i, i, time.Now().Format(time.RFC3339Nano))
+		err := common.WritePoints(host, port, db, common.SystemRp1Hour, pointsString)
 		if err != nil {
 			log.Fatal(err)
 		}
