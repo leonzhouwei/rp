@@ -12,12 +12,10 @@ import (
 	"github.com/qiniu/log.v1"
 )
 
-type RetentionPolicy string
-
 const (
-	RetentionPolicyVariable = "variable_rp"
-	RetentionPolicy1Hour    = "system_rp_1h"
-	RetentionPolicyForever  = "default"
+	VariableRetentionPolicyNameFormat = "%s_rp"
+
+	RetentionPolicyForever = "default"
 )
 
 type QueryRet struct {
@@ -68,7 +66,7 @@ func (e Serie) String() string {
 }
 
 func WritePoints(
-	host string, port int, db string, rp RetentionPolicy, points string) error {
+	host string, port int, db string, rp string, points string) error {
 
 	addr := host + ":" + strconv.Itoa(port)
 	url := "http://" + addr + "/write?db=" + db + "&rp=" + string(rp)
@@ -107,4 +105,79 @@ func QueryInfluxdb(host string, port int, db string, sql string) (ret QueryRet, 
 	}
 
 	return
+}
+
+func CreatDatabase(host string, port int, dbName string) error {
+	addr := host + ":" + strconv.Itoa(port)
+	url := "http://" + addr + "/query?q=CREATE+DATABASE+" + dbName
+	log.Info(url)
+	resp, err := http.Get(url)
+
+	if err != nil {
+		return fmt.Errorf("%v Create database fail:%v\n", url, err)
+	}
+	if resp != nil {
+		defer resp.Body.Close()
+
+		_, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return fmt.Errorf(
+				"%v Create database fail,respcode: %v, error: %v",
+				url,
+				resp.StatusCode,
+				err,
+			)
+		}
+	}
+
+	return nil
+}
+
+// CREATE RETENTION POLICY variable_rp ON mydb DURATION 0s REPLICATION 1
+func CreatRetentionPolicy(
+	host string,
+	port int,
+	dbName string,
+	rpName string,
+	rp string) error {
+
+	var sql string
+	if rp != "" || rp == RetentionPolicyForever {
+		sql = fmt.Sprintf(
+			"CREATE RETENTION POLICY %s ON %s DURATION 0s REPLICATION 1",
+			rpName,
+			dbName,
+		)
+	} else {
+		sql = fmt.Sprintf(
+			"CREATE RETENTION POLICY %s ON %s DURATION %s REPLICATION 1",
+			rpName,
+			dbName,
+			rp,
+		)
+	}
+
+	addr := host + ":" + strconv.Itoa(port)
+	url := "http://" + addr + "/query?q=" + url.QueryEscape(sql)
+	log.Info(url)
+	resp, err := http.Get(url)
+
+	if err != nil {
+		return fmt.Errorf("%v Create RP fail:%v\n", url, err)
+	}
+	if resp != nil {
+		defer resp.Body.Close()
+
+		_, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return fmt.Errorf(
+				"%v Create RP fail,respcode: %v, error: %v",
+				url,
+				resp.StatusCode,
+				err,
+			)
+		}
+	}
+
+	return nil
 }

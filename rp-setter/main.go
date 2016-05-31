@@ -20,7 +20,7 @@ func main() {
 	port := conf.Port
 	db := conf.Db
 
-	// read
+	// alter rp
 	result, err := common.QueryInfluxdb(host, port, db, sql)
 	if err != nil {
 		log.Fatal(err)
