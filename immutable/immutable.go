@@ -22,13 +22,13 @@ func main() {
 	host := conf.Host
 	port := conf.Port
 	db := conf.Db
-	
+
 	// create the database if not exits
 	err := common.CreatDatabase(host, port, db)
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	// write readonly points
 	for i := 1; i <= 10000; i++ {
 		pointsString := fmt.Sprintf(
