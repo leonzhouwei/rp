@@ -29,7 +29,7 @@ func main() {
 	for i := min; i <= max; i++ {
 		for j := 1; j <= 10000; j++ {
 			pointsString := fmt.Sprintf(points, i, i, j, time.Now().Format(time.RFC3339Nano))
-			err := common.WritePoints(host, port, db, common.RetentionPolicyForever, pointsString)
+			err := common.WritePoints(host, port, db, common.RetentionPolicyVariable, pointsString)
 			if err != nil {
 				log.Fatal(err)
 			}

@@ -15,8 +15,9 @@ import (
 type RetentionPolicy string
 
 const (
-	RetentionPolicy1Hour   = "system_rp_1h"
-	RetentionPolicyForever = "default"
+	RetentionPolicyVariable = "variable_rp"
+	RetentionPolicy1Hour    = "system_rp_1h"
+	RetentionPolicyForever  = "default"
 )
 
 type QueryRet struct {
