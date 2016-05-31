@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	sql = "select value from cpu_1"
+	sql = "select id from cpu_1"
 )
 
 func main() {
