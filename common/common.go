@@ -72,7 +72,7 @@ func WritePoints(
 
 	addr := host + ":" + strconv.Itoa(port)
 	url := "http://" + addr + "/write?db=" + db + "&rp=" + string(rp)
-	log.Info("Write points query:", points)
+	log.Info("Write points query:", url, ":", points)
 	body := strings.NewReader(points)
 	resp, err := http.Post(url, "text/plain", body)
 	log.Info(resp.Status)
