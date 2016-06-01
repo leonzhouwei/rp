@@ -2,16 +2,11 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	"tmp/common"
 	"tmp/conf"
 
 	"github.com/qiniu/log.v1"
-)
-
-const (
-	sleepDuration = time.Second
 )
 
 func init() {
@@ -42,7 +37,7 @@ func main() {
 
 		// alter rp
 		msg := fmt.Sprintf(
-			"alter %s of %s.%s to minimum duration", 
+			"alter %s of %s.%s to minimum duration",
 			rpName,
 			db,
 			seriesName,
@@ -58,6 +53,5 @@ func main() {
 		} else {
 			log.Info(msg, "ok:", result)
 		}
-		time.Sleep(sleepDuration)
 	}
 }
