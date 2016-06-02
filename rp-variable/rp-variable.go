@@ -15,7 +15,7 @@ const (
 )
 
 func init() {
-	log.SetOutputLevel(log.Ldebug)
+	log.SetOutputLevel(log.Lwarn)
 }
 
 func main() {
@@ -33,6 +33,7 @@ func main() {
 
 	// write the RP-variable series
 	for i := min; i <= max; i++ {
+		log.Warn(i)
 		seriesName := fmt.Sprintf("cpu_%v", i)
 		// create the RP
 		rpName := fmt.Sprintf(
@@ -52,7 +53,8 @@ func main() {
 		log.Info(result)
 
 		// write the points
-		for j := 1; j <= 1000; j++ {
+		for j := 1; j <= 1000000; j++ {
+			log.Warnf("%v, point#%v", seriesName, j)
 			pointsString := fmt.Sprintf(
 				points,
 				i,

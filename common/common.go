@@ -159,19 +159,30 @@ func CreatRetentionPolicy(
 	return QueryInfluxdb(host, port, dbName, sql)
 }
 
-func AlterRetentionPolicyToMinDuration(
+func AlterRetentionPolicyDuration(
+	host string,
+	port int,
+	dbName string,
+	rpName string,
+	newDuration string) (ret QueryRet, err error) {
+
+	sql := fmt.Sprintf(
+		"ALTER RETENTION POLICY %s on %s duration %s",
+		rpName,
+		dbName,
+		newDuration,
+	)
+
+	return QueryInfluxdb(host, port, dbName, sql)
+}
+
+func AlterRetentionPolicyDurationToOneHour(
 	host string,
 	port int,
 	dbName string,
 	rpName string) (ret QueryRet, err error) {
 
-	sql := fmt.Sprintf(
-		"ALTER RETENTION POLICY %s on %s duration 1h",
-		rpName,
-		dbName,
-	)
-
-	return QueryInfluxdb(host, port, dbName, sql)
+	return AlterRetentionPolicyDuration(host, port, dbName, rpName, "1h")
 }
 
 func CloseResponse(resp *http.Response) {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"tmp/common"
 	"tmp/conf"
@@ -20,12 +21,6 @@ func main() {
 	min := conf.MinSeriesNum
 	max := conf.MaxSeriesNum
 
-	// create the database if not exits
-	err := common.CreatDatabase(host, port, db)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// write the RP-variable series
 	for i := min; i <= max; i++ {
 		seriesName := fmt.Sprintf("cpu_%v", i)
@@ -35,6 +30,17 @@ func main() {
 			seriesName,
 		)
 
+		fmt.Println(
+			"i will count 10 seconds before the benchmark after changing the duration of the RP",
+			rpName,
+			"of",
+			seriesName,
+		)
+		for i := 9; i >= 0; i-- {
+			fmt.Println(i)
+			time.Sleep(time.Second * 1)
+		}
+
 		// alter rp
 		msg := fmt.Sprintf(
 			"alter %s of %s.%s to minimum duration",
@@ -42,7 +48,7 @@ func main() {
 			db,
 			seriesName,
 		)
-		result, err := common.AlterRetentionPolicyToMinDuration(
+		result, err := common.AlterRetentionPolicyDurationToOneHour(
 			host,
 			port,
 			db,
